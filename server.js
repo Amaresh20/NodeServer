@@ -45,12 +45,9 @@ router.use(
   },
   (req, res, next) => {
     if (req.method == "POST") {
-      console.log("post is called", req.body);
       if (Object.keys(req.body).length === 0) {
-        console.log("req.body is called");
         return res.status(400).json({ message: "body should not be empty" });
       } else if (!req.body?.firstname) {
-        console.log("first name called");
         return res
           .status(400)
           .json({ message: "body should contain firstname" });
@@ -64,7 +61,7 @@ router.use(
     } else if (req.method == "PUT") {
       if (!req.body) {
         return res.status(400).json({ message: "body should not be empty" });
-      } else if (!req.body.id) {
+      } else if (!req.body?.id) {
         return res.status(400).json({ message: "body should contain id" });
       }
     }
@@ -81,16 +78,16 @@ router.use(
   });
 //get:id ->to show specific details for specific id
 router.get("/users/:id", (req, res) => {
-  const userId = req.params.id;
-  const user = users.find((user) => user.id == userId);
+  const userId = Number(req.params.id);
+  const user = users.find((user) => user.id === userId);
   if (!user) {
-    res.status(404).json({ message: "user is not found with this id" });
+    return res.status(404).json({ message: "user is not found with this id" });
   }
   res.json(user);
 });
 //post ->to add a new user
 router.post("/user", (req, res) => {
-  const id = (Math.random() * 10).toFixed(2);
+  const id = Math.random() * 10;
   const { firstname, lastname, hobby } = req.body;
   const newUser = {
     id: id,
@@ -103,10 +100,11 @@ router.post("/user", (req, res) => {
 });
 //put -> to update details in an existing user
 router.put("/user/:id", (req, res) => {
-  const userId = req.params.id;
-  const user = users.find((user) => user.id == userId);
+  const userId = Number(req.params.id);
+  const user = users.find((user) => user.id === userId);
+  console.log("user", user);
   if (!user) {
-    res.status(404).json({
+    return res.status(404).json({
       message: "user id is not found,user details can't updated with id",
     });
   }
@@ -119,11 +117,13 @@ router.put("/user/:id", (req, res) => {
 });
 //delete ->to remove an user with specific id
 router.delete("/user/:id", (req, res) => {
-  const userId = req.params.id;
-  const user = users.find((user) => user.id == userId);
+  const userId = Number(req.params.id);
+  const user = users.find((user) => user.id === userId);
   if (!user) {
-    res.status(404).json({ message: "user can't be deleted with this id" });
+    return res
+      .status(404)
+      .json({ message: "user can't be deleted with this id" });
   }
-  const filteredUser = users.filter((user) => user.id != userId);
+  const filteredUser = users.filter((user) => user.id !== userId);
   res.json(filteredUser);
 });
