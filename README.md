@@ -1,6 +1,6 @@
 # NodeServer
 
-git gub link:-
+git hub link:-
 https://github.com/Amaresh20/NodeServer
 for using in local machine
 1.cd "local folder";
